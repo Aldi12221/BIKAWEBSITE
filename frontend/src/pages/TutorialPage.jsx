@@ -8,6 +8,7 @@ import { toast } from 'react-hot-toast';
 export default function TutorialPage() {
   const [quizzes, setQuizzes] = useState([]);
   const [tutorials, setTutorials] = useState([]);
+  const [videoTutorials, setVideoTutorials] = useState([]);
   const [selectedContent, setSelectedContent] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const navigate = useNavigate();
@@ -41,6 +42,10 @@ export default function TutorialPage() {
 
     api.getContents('tutorial').then(d => {
       if (Array.isArray(d)) setTutorials(d);
+    }).catch(console.error);
+
+    api.getVideoTutorials().then(d => {
+      if (Array.isArray(d)) setVideoTutorials(d.filter(v => v.is_published !== false));
     }).catch(console.error);
   }, []);
 
@@ -220,8 +225,8 @@ export default function TutorialPage() {
 
                   {/* Right Column - Videos */}
                   <div className="space-y-3 sm:space-y-4">
-                    {tutorials.length > 0 ? tutorials.slice(0, 3).map((video) => (
-                      <div key={video.id} onClick={() => video.link_eksternal && window.open(video.link_eksternal, '_blank')} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
+                    {videoTutorials.length > 0 ? videoTutorials.slice(0, 3).map((video) => (
+                      <div key={video.id} onClick={() => video.video_url && window.open(video.video_url, '_blank')} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
                         <div className="w-14 h-14 sm:w-16 sm:h-16 bg-black/50 rounded-xl flex items-center justify-center text-white shrink-0 relative overflow-hidden">
                           {video.gambar ? <img src={video.gambar} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" /> : <div className="absolute inset-0 bg-rose-500/20"></div>}
                           <FiPlay className="text-xl relative z-10 ml-1" fill="currentColor" />
@@ -231,7 +236,9 @@ export default function TutorialPage() {
                           <p className="text-[10px] font-medium text-slate-400">Tonton Sekarang</p>
                         </div>
                       </div>
-                    )) : null}
+                    )) : (
+                      <div className="py-4 text-white/80">Belum ada video tutorial tersedia</div>
+                    )}
                   </div>
                 </div>
               </div>

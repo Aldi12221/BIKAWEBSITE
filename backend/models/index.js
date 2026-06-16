@@ -6,6 +6,7 @@ const Tutorial = require('./Tutorial');
 const Business = require('./Business');
 const Finance = require('./Finance');
 const Template = require('./Template');
+const VideoTutorial = require('./VideoTutorial');
 
 module.exports = {
   User,
@@ -15,5 +16,6 @@ module.exports = {
   Tutorial,
   Business,
   Finance
-  ,Template
+  ,Template,
+  VideoTutorial
 };

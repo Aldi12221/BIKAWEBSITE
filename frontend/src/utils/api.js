@@ -172,6 +172,36 @@ const api = {
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
+
+  // ===== Video Tutorials =====
+  getVideoTutorials: () =>
+    fetch(`${API_BASE}/video-tutorials`).then(r => r.json()),
+
+  createVideoTutorial: (data) =>
+    fetch(`${API_BASE}/video-tutorials`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    }).then(r => r.json()),
+
+  updateVideoTutorial: (id, data) =>
+    fetch(`${API_BASE}/video-tutorials/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
+      body: JSON.stringify(data)
+    }).then(r => r.json()),
+
+  deleteVideoTutorial: (id) =>
+    fetch(`${API_BASE}/video-tutorials/${id}`, {
+      method: 'DELETE',
+      headers: getAuthHeader()
+    }).then(r => r.json()),
 };
 
 export default api;

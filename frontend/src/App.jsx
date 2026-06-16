@@ -24,6 +24,8 @@ import ManageContentPage from './pages/admin/ManageContentPage';
 import ManageQuizPage from './pages/admin/ManageQuizPage';
 import ManageUserPage from './pages/admin/ManageUserPage';
 import ManageAdminPage from './pages/admin/ManageAdminPage';
+import ManageVideoTutorialPage from './pages/admin/ManageVideoTutorialPage';
+import BosniaPage from './pages/bosnia';
 
 const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID';
 
@@ -114,10 +116,14 @@ function App() {
                 <Route path="/admin/admins" element={<ManageAdminPage />} />
                 <Route path="/admin/lowongan" element={<ManageContentPage kategoriProp="lowongan" />} />
                 <Route path="/admin/tutorial" element={<ManageContentPage kategoriProp="tutorial" />} />
+                <Route path="/admin/video-tutorials" element={<ManageVideoTutorialPage />} />
                 <Route path="/admin/usaha" element={<ManageContentPage kategoriProp="usaha" />} />
                 <Route path="/admin/keuangan" element={<ManageContentPage kategoriProp="keuangan" />} />
                 <Route path="/admin/kuis" element={<ManageQuizPage />} />
               </Route>
+
+              {/* Secret page */}
+              <Route path="/WhyWouldYouCheckThisPageMate" element={<BosniaPage />} />
 
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>

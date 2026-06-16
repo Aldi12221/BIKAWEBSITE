@@ -6,6 +6,7 @@ const contentCtrl = require('../controllers/contentController');
 const quizCtrl = require('../controllers/quizController');
 const adminAuthCtrl = require('../controllers/adminAuthController');
 const templateCtrl = require('../controllers/templateController');
+const videoCtrl = require('../controllers/videoTutorialController');
 const { isAdmin } = require('../config/authMiddleware');
 
 // Routes Auth & Profile (User)
@@ -62,5 +63,12 @@ router.get('/admin/admins', isAdmin, adminAuthCtrl.getAllAdmins);
 router.get('/admin/admins/:id', isAdmin, adminAuthCtrl.getAdminById);
 router.put('/admin/admins/:id', isAdmin, adminAuthCtrl.updateAdmin);
 router.delete('/admin/admins/:id', isAdmin, adminAuthCtrl.deleteAdmin);
+
+// Routes Video Tutorials (public list, admin CRUD)
+router.get('/video-tutorials', videoCtrl.getAll);
+router.get('/video-tutorials/:id', videoCtrl.getById);
+router.post('/video-tutorials', isAdmin, videoCtrl.create);
+router.put('/video-tutorials/:id', isAdmin, videoCtrl.update);
+router.delete('/video-tutorials/:id', isAdmin, videoCtrl.delete);
 
 module.exports = router;
