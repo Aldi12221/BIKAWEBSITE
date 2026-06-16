@@ -94,7 +94,7 @@ export default function TutorialPage() {
       <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-rose-500/10 dark:bg-rose-900/10 rounded-full blur-[150px] -z-10 translate-x-1/3 -translate-y-1/3"></div>
       <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-red-500/10 dark:bg-red-900/10 rounded-full blur-[120px] -z-10 -translate-x-1/3 translate-y-1/3"></div>
 
-      {!selectedContent ? (
+      {!selectedContent && !selectedVideo ? (
         <>
           {/* Header */}
           <div className="text-center pt-32 pb-14 relative z-10">
@@ -486,35 +486,61 @@ export default function TutorialPage() {
         </div>
       )}
 
-      {/* ===== VIDEO PLAYER MODAL ===== */}
+      {/* Fullscreen Video View (article-like) */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setSelectedVideo(null)}>
-          <div className="w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl animate-[slideUp_0.35s_ease-out]" onClick={(e) => e.stopPropagation()}>
-            <div className="relative">
-              <button onClick={() => setSelectedVideo(null)} className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center border-none">
-                <FiX size={18} />
-              </button>
-              <div className="w-full bg-black flex items-center justify-center" style={{aspectRatio: '16/9'}}>
-                {(() => {
-                  const url = selectedVideo.video_url || '';
-                  const isYouTube = /youtu\.be|youtube\.com/.test(url);
-                  if (isYouTube) {
-                    let embed = url;
-                    const ytMatch = url.match(/(?:v=|youtu\.be\/)([\w-]+)/);
-                    const id = ytMatch ? ytMatch[1] : null;
-                    if (id) embed = `https://www.youtube.com/embed/${id}`;
-                    return <iframe title={selectedVideo.judul} src={embed} className="w-full h-full" allowFullScreen frameBorder="0" />;
-                  }
-                  return (
-                    <video src={url} controls className="w-full h-full bg-black" />
-                  );
-                })()}
+        <div className="animate-[slideUp_0.35s_ease-out] w-full bg-white dark:bg-zinc-950 flex flex-col">
+          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-slate-100 dark:border-white/5">
+            <button onClick={() => setSelectedVideo(null)} className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors bg-transparent border-none cursor-pointer">
+              <FiX size={20} /> Tutup Video
+            </button>
+            <span className="bg-rose-500 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-sm">Video Tutorial</span>
+          </div>
+
+          <div className={`w-full flex justify-center items-center py-6 bg-black`}>
+            <div className="w-full max-w-6xl h-[60vh] bg-black flex items-center justify-center">
+              {(() => {
+                const url = selectedVideo.video_url || '';
+                const isYouTube = /youtu\.be|youtube\.com/.test(url);
+                if (isYouTube) {
+                  let embed = url;
+                  const ytMatch = url.match(/(?:v=|youtu\.be\/)([\w-]+)/);
+                  const id = ytMatch ? ytMatch[1] : null;
+                  if (id) embed = `https://www.youtube.com/embed/${id}`;
+                  return <iframe title={selectedVideo.judul} src={embed} className="w-full h-full" allowFullScreen frameBorder="0" />;
+                }
+                return (
+                  <video src={url} controls className="w-full h-full bg-black" />
+                );
+              })()}
+            </div>
+          </div>
+
+          <div className="max-w-4xl mx-auto px-6 sm:px-10 py-12 pb-24 w-full flex-grow">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tight">
+              {selectedVideo.judul}
+            </h1>
+            {selectedVideo.deskripsi && (
+              <p className="text-slate-500 dark:text-slate-400 font-bold text-sm sm:text-base mb-8 pb-6 border-b border-slate-100 dark:border-white/5">
+                {selectedVideo.deskripsi}
+              </p>
+            )}
+
+            <div className="prose dark:prose-invert max-w-none">
+              <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base sm:text-lg font-medium">
+                {/* Admin can add more descriptive content via `deskripsi` in admin panel */}
               </div>
             </div>
-            <div className="p-4 bg-white dark:bg-zinc-900">
-              <h3 className="font-bold text-lg text-slate-900 dark:text-white">{selectedVideo.judul}</h3>
-              {selectedVideo.deskripsi && <p className="text-sm text-slate-500 dark:text-slate-400">{selectedVideo.deskripsi}</p>}
-            </div>
+
+            {selectedVideo.link_eksternal && (
+              <div className="mt-10 pt-6 border-t border-slate-100 dark:border-white/5">
+                <button
+                  onClick={() => window.open(selectedVideo.link_eksternal, '_blank')}
+                  className="flex items-center gap-2 text-rose-500 font-black text-sm hover:gap-3 transition-all cursor-pointer bg-transparent border-none"
+                >
+                  Kunjungi Sumber Eksternal <FiExternalLink />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
