@@ -51,13 +51,14 @@ export default function TutorialPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedQuiz || selectedVideo) {
+    // only prevent body scroll for modals that cover the whole app (quiz detail or article)
+    if (selectedQuiz || selectedContent) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
-  }, [selectedQuiz, selectedVideo]);
+  }, [selectedQuiz, selectedContent]);
 
   // Scroll to top when an article is opened
   useEffect(() => {
@@ -406,15 +407,15 @@ export default function TutorialPage() {
           </div>
         </div>
       ) : selectedVideo ? (
-        <div className="fixed inset-0 z-50 overflow-y-auto bg-white dark:bg-zinc-950">
-          <div className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-slate-100 dark:border-white/5">
+        <div className="animate-[slideUp_0.35s_ease-out] w-full bg-white dark:bg-zinc-950 flex flex-col">
+          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-slate-100 dark:border-white/5">
             <button onClick={() => setSelectedVideo(null)} className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-rose-500 dark:hover:text-rose-400 transition-colors bg-transparent border-none cursor-pointer">
               <FiX size={20} /> Tutup Video
             </button>
             <span className="bg-rose-500 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-sm">Video Tutorial</span>
           </div>
 
-          <div className={`w-full flex justify-center items-center py-6 bg-black`}>
+          <div className={`w-full flex justify-center items-center py-6 bg-black`}> 
             <div className="w-full max-w-6xl h-[60vh] bg-black flex items-center justify-center">
               {(() => {
                 const url = selectedVideo.video_url || '';
