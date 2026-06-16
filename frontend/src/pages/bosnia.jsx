@@ -6,9 +6,9 @@ export default function BosniaPage() {
 			<div style={{padding:40, textAlign:'center'}}>
 				<h1 style={{
 					fontSize:72,
-					color:'#ff0000',
-					textShadow:'3px 3px 0 #000, -2px -2px 0 #fff, 6px 6px 0 #ffa500',
-					transform:'rotate(-4deg)',
+					color:'#b30000',
+					textShadow:'4px 4px 0 #000, -3px -3px 0 #fff',
+					transform:'rotate(-3deg)',
 					margin:'10px 0'
 				}}>GET BOSNIA'D PLUH, U HAVE 10 SEC TO BOSNIA OTHER PPL</h1>
 
@@ -16,47 +16,54 @@ export default function BosniaPage() {
 					width:560,
 					height:320,
 					margin:'20px auto',
-					background:'#0c5aa6',
-					border:'8px dashed yellow',
+					background:'#002f6c', /* deeper blue */
+					border:'6px solid #ffd400',
 					position:'relative',
-					boxShadow:'0 12px 0 rgba(0,0,0,0.12)'
+					overflow:'hidden',
+					boxShadow:'0 16px 0 rgba(0,0,0,0.18)'
 				}}>
-					{/* Ugly attempt at Bosnia flag: sloppy yellow triangle and stars */}
+					{/* More correct triangle (pointing to the right) */}
 					<div style={{
 						position:'absolute',
-						left:'8%',
-						top:'8%',
-						width:0,
-						height:0,
-						borderLeft:'320px solid #ffd400',
-						borderTop:'160px solid transparent',
-						borderBottom:'160px solid transparent',
-						transform:'skewX(-10deg)'
+						left:0,
+						top:0,
+						bottom:0,
+						width:'46%',
+						background:'#ffd400',
+						clipPath:'polygon(0 0, 100% 50%, 0 100%)',
+						transform:'skewX(-4deg)'
 					}} />
 
-					{/* hand-drawn stars */}
-					{Array.from({length:7}).map((_,i)=> (
-						<div key={i} style={{
-							position:'absolute',
-							left: 60 + i*60,
-							top: 40 + (i%2?20:0),
-							width:22,
-							height:22,
-							background:'#fff',
-							clipPath:'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
-							transform:`rotate(${i*8}deg)`,
-							boxShadow:'0 2px 0 rgba(0,0,0,0.25)'
-						}} />
-					))}
-                    <img src="assets/images/q4fi1o1chslf1.jpeg" alt="BOSNIAAAAAA" />
-					{/* terrible footer stripe */}
-					<div style={{position:'absolute',bottom:0,left:0,right:0,height:40,background:'linear-gradient(90deg,#002147,#1e90ff)'}} />
+					{/* White stars along the hypotenuse (some partially clipped) */}
+					{Array.from({length:9}).map((_,i)=> {
+						const left = 28 + i*30; // along diagonal
+						const top = 28 + i*22;
+						return (
+							<div key={i} style={{
+								position:'absolute',
+								left: `${left}px`,
+								top: `${top}px`,
+								width:18,
+								height:18,
+								background:'#fff',
+								clipPath:'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+								transform:`rotate(${i*6}deg)`,
+								boxShadow:'0 1px 0 rgba(0,0,0,0.25)'
+							}} />
+						);
+					})}
+
+					{/* Slightly ugly decorative watermark image */}
+					<img src="assets/images/q4fi1o1chslf1.jpeg" alt="BOSNIA" style={{position:'absolute', right:8, bottom:8, width:120, opacity:0.85, transform:'rotate(-6deg)', border:'2px solid rgba(255,255,255,0.6)'}} />
+
+					{/* crude bottom stripe */}
+					<div style={{position:'absolute',bottom:0,left:0,right:0,height:36,background:'linear-gradient(90deg,#001f4b,#1e90ff)'}} />
 				</div>
 
-				<p style={{color:'#222', fontWeight:700, transform:'rotate(1deg)'}}>salahsatu developer kami menciptakan ini karena biar keren websitenya dikasih easter egg</p>
+				<p style={{color:'#222', fontWeight:700, transform:'rotate(1deg)', marginTop:12}}>salahsatu developer kami menciptakan ini karena biar keren websitenya dikasih easter egg dan ini adalah percobaan terbaiknya untuk membuat bendera bosnia dengan css murni</p>
 			</div>
 
-            ekshyuwelli kunjungi kami di <a href="wa.me/6287762006122" style={{color:'#0c5aa6', fontWeight:700}}>https://wa.me/6287762006122</a> untuk mendapatkanwebsite keren dengan harga miring(tenang kami gaakan ngasih easter egg ngawur ini didalam projkek profesional kami)
+			ekshyuwelli kunjungi kami di <a href="https://wa.me/6287762006122" style={{color:'#0c5aa6', fontWeight:700}}>https://wa.me/6287762006122</a> untuk mendapatkanwebsite keren dengan harga miring (tenang kami gaakan ngasih easter egg ngawur ini didalam projkek profesional kami)
 		</div>
 	);
 }

@@ -11,6 +11,7 @@ export default function TutorialPage() {
   const [videoTutorials, setVideoTutorials] = useState([]);
   const [selectedContent, setSelectedContent] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,13 +51,13 @@ export default function TutorialPage() {
   }, []);
 
   useEffect(() => {
-    if (selectedQuiz) {
+    if (selectedQuiz || selectedVideo) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = 'unset';
     }
     return () => { document.body.style.overflow = 'unset'; };
-  }, [selectedQuiz]);
+  }, [selectedQuiz, selectedVideo]);
 
   // Scroll to top when an article is opened
   useEffect(() => {
@@ -226,7 +227,7 @@ export default function TutorialPage() {
                   {/* Right Column - Videos */}
                   <div className="space-y-3 sm:space-y-4">
                     {videoTutorials.length > 0 ? videoTutorials.slice(0, 3).map((video) => (
-                      <div key={video.id} onClick={() => video.video_url && window.open(video.video_url, '_blank')} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
+                      <div key={video.id} onClick={() => video.video_url && setSelectedVideo(video)} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
                         <div className="w-14 h-14 sm:w-16 sm:h-16 bg-black/50 rounded-xl flex items-center justify-center text-white shrink-0 relative overflow-hidden">
                           {video.gambar ? <img src={video.gambar} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" /> : <div className="absolute inset-0 bg-rose-500/20"></div>}
                           <FiPlay className="text-xl relative z-10 ml-1" fill="currentColor" />
@@ -480,6 +481,39 @@ export default function TutorialPage() {
                   <FiPlay size={14} fill="currentColor" /> {isPsychotestQuiz ? 'Mulai Tes' : 'Mulai Kuis'}
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== VIDEO PLAYER MODAL ===== */}
+      {selectedVideo && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={() => setSelectedVideo(null)}>
+          <div className="w-full max-w-4xl bg-white dark:bg-zinc-900 rounded-2xl overflow-hidden shadow-2xl animate-[slideUp_0.35s_ease-out]" onClick={(e) => e.stopPropagation()}>
+            <div className="relative">
+              <button onClick={() => setSelectedVideo(null)} className="absolute top-4 right-4 z-20 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center border-none">
+                <FiX size={18} />
+              </button>
+              <div className="w-full bg-black flex items-center justify-center" style={{aspectRatio: '16/9'}}>
+                {(() => {
+                  const url = selectedVideo.video_url || '';
+                  const isYouTube = /youtu\.be|youtube\.com/.test(url);
+                  if (isYouTube) {
+                    let embed = url;
+                    const ytMatch = url.match(/(?:v=|youtu\.be\/)([\w-]+)/);
+                    const id = ytMatch ? ytMatch[1] : null;
+                    if (id) embed = `https://www.youtube.com/embed/${id}`;
+                    return <iframe title={selectedVideo.judul} src={embed} className="w-full h-full" allowFullScreen frameBorder="0" />;
+                  }
+                  return (
+                    <video src={url} controls className="w-full h-full bg-black" />
+                  );
+                })()}
+              </div>
+            </div>
+            <div className="p-4 bg-white dark:bg-zinc-900">
+              <h3 className="font-bold text-lg text-slate-900 dark:text-white">{selectedVideo.judul}</h3>
+              {selectedVideo.deskripsi && <p className="text-sm text-slate-500 dark:text-slate-400">{selectedVideo.deskripsi}</p>}
             </div>
           </div>
         </div>
