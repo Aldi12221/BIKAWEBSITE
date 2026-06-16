@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { FiPlus, FiTrash2, FiEdit3, FiX, FiSave, FiSearch, FiExternalLink, FiCheckSquare, FiSquare, FiAlertTriangle, FiBriefcase, FiBookOpen, FiActivity, FiDollarSign, FiFilter, FiRefreshCw, FiChevronDown, FiPaperclip, FiFile, FiFileText } from 'react-icons/fi';
+import RichContentEditor from '../../components/RichContentEditor';
 import { useNavigate } from 'react-router-dom';
 import api from '../../utils/api';
 import toast from 'react-hot-toast';
@@ -861,12 +862,9 @@ export default function ManageContentPage({ kategoriProp }) {
                   </div>
                 ) : (
                   <MField label="Isi Konten / Artikel Lengkap" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-                    <MTextarea
+                    <RichContentEditor
                       value={form.isi_konten}
-                      onChange={e => setForm({ ...form, isi_konten: e.target.value })}
-                      placeholder="Tulis konten lengkap artikel di sini..."
-                      rows={14}
-                      style={{ flex: 1, minHeight: 280 }}
+                      onChange={val => setForm(prev => ({ ...prev, isi_konten: val }))}
                     />
                   </MField>
                 )}

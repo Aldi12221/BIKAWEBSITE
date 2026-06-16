@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FiPlay, FiBookOpen, FiMessageCircle, FiX, FiExternalLink, FiArrowRight, FiDownload, FiFileText } from 'react-icons/fi';
+import RichContentRenderer from '../components/RichContentRenderer';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
@@ -345,9 +346,7 @@ export default function TutorialPage() {
             </p>
 
             <div className="prose dark:prose-invert max-w-none">
-              <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base sm:text-lg font-medium">
-                {selectedContent.isi_konten}
-              </div>
+              <RichContentRenderer content={selectedContent.isi_konten} />
             </div>
 
             {selectedContent.link_eksternal && (

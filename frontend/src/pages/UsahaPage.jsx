@@ -19,6 +19,7 @@ import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import RichContentRenderer from '../components/RichContentRenderer';
 
 // Business templates are fetched from server (admin-managed)
 
@@ -416,9 +417,7 @@ export default function UsahaPage() {
             </p>
 
             <div className="prose dark:prose-invert max-w-none">
-              <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base sm:text-lg font-medium">
-                {selectedContent.isi_konten}
-              </div>
+              <RichContentRenderer content={selectedContent.isi_konten} />
             </div>
 
             {selectedContent.link_eksternal && (
