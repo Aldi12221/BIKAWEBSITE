@@ -79,14 +79,17 @@ export default function UsahaPage() {
     api.getTemplates().then((t) => { if (Array.isArray(t)) setBusinessTemplates(t); }).catch(() => setBusinessTemplates([]));
   }, []);
 
+  // Scroll to top when an article is opened
   useEffect(() => {
     if (selectedContent) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    return () => { document.body.style.overflow = 'unset'; };
   }, [selectedContent]);
+
+  // Close article when navigating via sidebar
+  useEffect(() => {
+    setSelectedContent(null);
+  }, [location.pathname, location.hash]);
 
   // templates fetched from server
 
@@ -176,8 +179,10 @@ export default function UsahaPage() {
       <div className="fixed top-0 right-0 w-[500px] h-[500px] bg-blue-100/30 dark:bg-blue-900/10 rounded-full blur-[120px] -z-10 translate-x-1/2 -translate-y-1/2"></div>
       <div className="fixed bottom-0 left-0 w-[400px] h-[400px] bg-red-50/50 dark:bg-red-900/10 rounded-full blur-[100px] -z-10 -translate-x-1/2 translate-y-1/2"></div>
 
-      {/* HEADER */}
-      <section className="pt-32 pb-14 text-center relative z-10">
+      {!selectedContent ? (
+        <>
+          {/* HEADER */}
+          <section className="pt-32 pb-14 text-center relative z-10">
         <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md px-5 py-2 rounded-full shadow-sm border border-slate-100/50 dark:border-zinc-800 mb-5 hover:shadow-md transition-shadow">
           <FiZap className="text-blue-600" size={18} />
           <span className="text-[11px] font-black text-blue-900 dark:text-blue-400 uppercase tracking-[0.25em]">Mulai Langkah Pertamamu</span>
@@ -377,59 +382,55 @@ export default function UsahaPage() {
         )}
 
       </div>
-      {selectedContent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-md" onClick={closeContentModal}>
-          <div
-            className="bg-white dark:bg-zinc-900 rounded-[32px] w-full max-w-2xl max-h-[85vh] overflow-hidden shadow-2xl animate-[slideUp_0.35s_ease-out] flex flex-col"
-            onClick={(event) => event.stopPropagation()}
-          >
-            {/* Modal Header/Image */}
-            <div className="relative w-full h-48 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40 shrink-0">
-              {selectedContent.gambar ? (
-                <img src={selectedContent.gambar} alt={selectedContent.judul} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-blue-500 opacity-30">
-                  <FiFileText size={56} />
-                </div>
-              )}
-              <button onClick={closeContentModal} className="absolute top-4 right-4 w-10 h-10 bg-black/30 hover:bg-black/50 text-white rounded-full flex items-center justify-center backdrop-blur-md border-none cursor-pointer transition-all">
-                <FiX size={20} />
-              </button>
-              <div className="absolute bottom-4 left-6">
-                <span className="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-lg capitalize">
-                  {selectedContent.kategori}
-                </span>
+        </>
+      ) : (
+        <div className="animate-[slideUp_0.35s_ease-out] w-full bg-white dark:bg-zinc-950 flex flex-col">
+          {/* Sticky Close Header */}
+          <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white/90 dark:bg-zinc-950/90 backdrop-blur-xl border-b border-slate-100 dark:border-white/5">
+            <button onClick={closeContentModal} className="flex items-center gap-2 text-sm font-bold text-slate-500 dark:text-slate-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors bg-transparent border-none cursor-pointer">
+              <FiX size={20} /> Tutup Artikel
+            </button>
+            <span className="bg-blue-600 text-white text-[10px] font-black uppercase px-4 py-1.5 rounded-full shadow-sm capitalize">
+              {selectedContent.kategori || 'Usaha'}
+            </span>
+          </div>
+
+          {/* Full Image */}
+          {selectedContent.gambar ? (
+            <div className={`w-full flex justify-center items-center py-8 bg-slate-100/50 dark:bg-zinc-900/50`}>
+              <img src={selectedContent.gambar} alt={selectedContent.judul} className="max-w-full max-h-[60vh] object-contain shadow-sm rounded-lg" />
+            </div>
+          ) : (
+            <div className={`w-full h-48 flex items-center justify-center text-6xl opacity-30 bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/40 dark:to-indigo-900/40`}>
+              <FiFileText size={56} />
+            </div>
+          )}
+
+          {/* Content */}
+          <div className="max-w-4xl mx-auto px-6 sm:px-10 py-12 pb-24 w-full flex-grow">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tight">
+              {selectedContent.judul}
+            </h1>
+            <p className="text-slate-500 dark:text-slate-400 font-bold text-sm sm:text-base mb-8 pb-6 border-b border-slate-100 dark:border-white/5">
+              {selectedContent.deskripsi}
+            </p>
+
+            <div className="prose dark:prose-invert max-w-none">
+              <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base sm:text-lg font-medium">
+                {selectedContent.isi_konten}
               </div>
             </div>
 
-            {/* Modal Body */}
-            <div className="p-8 overflow-y-auto custom-scrollbar">
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tight">
-                {selectedContent.judul}
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 font-bold text-sm mb-8 pb-4 border-b border-slate-100 dark:border-white/5">
-                {selectedContent.deskripsi}
-              </p>
-
-              <div className="prose dark:prose-invert max-w-none">
-                <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base font-medium">
-                  {selectedContent.isi_konten}
-                </div>
+            {selectedContent.link_eksternal && (
+              <div className="mt-10 pt-6 border-t border-slate-100 dark:border-white/5">
+                <button
+                  onClick={() => window.open(selectedContent.link_eksternal, '_blank', 'noopener,noreferrer')}
+                  className="flex items-center gap-2 text-blue-600 font-black text-sm hover:gap-3 transition-all cursor-pointer bg-transparent border-none"
+                >
+                  Kunjungi Sumber Eksternal <FiExternalLink />
+                </button>
               </div>
-
-              {selectedContent.link_eksternal && (
-                <div className="mt-10 pt-6 border-t border-slate-100 dark:border-white/5">
-                  <button
-                    onClick={() => window.open(selectedContent.link_eksternal, '_blank', 'noopener,noreferrer')}
-                    className="flex items-center gap-2 text-blue-600 font-black text-sm hover:gap-3 transition-all cursor-pointer bg-transparent border-none"
-                  >
-                    Kunjungi Sumber Eksternal <FiExternalLink />
-                  </button>
-                </div>
-              )}
-
-              {/* File lampiran dihapus sesuai permintaan */}
-            </div>
+            )}
           </div>
         </div>
       )}
