@@ -12,6 +12,8 @@ export default function TutorialPage() {
   const [selectedContent, setSelectedContent] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoPage, setVideoPage] = useState(1);
+  const videosPerPage = 3;
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,6 +51,10 @@ export default function TutorialPage() {
       if (Array.isArray(d)) setVideoTutorials(d.filter(v => v.is_published !== false));
     }).catch(console.error);
   }, []);
+
+  useEffect(() => {
+    setVideoPage(1);
+  }, [videoTutorials]);
 
   useEffect(() => {
     // only prevent body scroll for modals that cover the whole app (quiz detail or article)
@@ -227,21 +233,44 @@ export default function TutorialPage() {
 
                   {/* Right Column - Videos */}
                   <div className="space-y-3 sm:space-y-4">
-                    {videoTutorials.length > 0 ? videoTutorials.slice(0, 3).map((video) => (
-                      <div key={video.id} onClick={() => video.video_url && setSelectedVideo(video)} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
-                        <div className="w-14 h-14 sm:w-16 sm:h-16 bg-black/50 rounded-xl flex items-center justify-center text-white shrink-0 relative overflow-hidden">
-                          {video.gambar ? <img src={video.gambar} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" /> : <div className="absolute inset-0 bg-rose-500/20"></div>}
-                          <FiPlay className="text-xl relative z-10 ml-1" fill="currentColor" />
+                    {videoTutorials.length > 0 ? (
+                      videoTutorials.slice((videoPage - 1) * videosPerPage, videoPage * videosPerPage).map((video) => (
+                        <div key={video.id} onClick={() => video.video_url && setSelectedVideo(video)} className="flex items-center gap-3 sm:gap-4 bg-[#4A3B3B] dark:bg-zinc-900 rounded-2xl p-2 sm:p-3 hover:shadow-md transition-shadow cursor-pointer border border-[#5A4B4B] dark:border-zinc-800">
+                          <div className="w-14 h-14 sm:w-16 sm:h-16 bg-black/50 rounded-xl flex items-center justify-center text-white shrink-0 relative overflow-hidden">
+                            {video.gambar ? <img src={video.gambar} className="absolute inset-0 w-full h-full object-cover opacity-60" alt="" /> : <div className="absolute inset-0 bg-rose-500/20"></div>}
+                            <FiPlay className="text-xl relative z-10 ml-1" fill="currentColor" />
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="font-bold text-[13px] text-white leading-tight mb-1 line-clamp-1">{video.judul}</h4>
+                            <p className="text-[10px] font-medium text-slate-400">Tonton Sekarang</p>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <h4 className="font-bold text-[13px] text-white leading-tight mb-1 line-clamp-1">{video.judul}</h4>
-                          <p className="text-[10px] font-medium text-slate-400">Tonton Sekarang</p>
-                        </div>
-                      </div>
-                    )) : (
+                      ))
+                    ) : (
                       <div className="py-4 text-white/80">Belum ada video tutorial tersedia</div>
                     )}
                   </div>
+                  {videoTutorials.length > videosPerPage && (
+                    <div className="mt-4 flex items-center justify-between gap-3 rounded-3xl bg-white/10 border border-white/10 px-3 py-3">
+                      <button
+                        onClick={() => setVideoPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={videoPage === 1}
+                        className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Sebelumnya
+                      </button>
+                      <div className="text-sm font-bold text-white">
+                        Halaman {videoPage} / {Math.ceil(videoTutorials.length / videosPerPage)}
+                      </div>
+                      <button
+                        onClick={() => setVideoPage((prev) => Math.min(prev + 1, Math.ceil(videoTutorials.length / videosPerPage)))}
+                        disabled={videoPage === Math.ceil(videoTutorials.length / videosPerPage)}
+                        className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-50"
+                      >
+                        Selanjutnya
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
