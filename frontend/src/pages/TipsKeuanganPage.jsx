@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../utils/api';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-hot-toast';
+import RichContentRenderer from '../components/RichContentRenderer';
 
 export default function TipsKeuanganPage() {
     const [items, setItems] = useState([]);
@@ -121,8 +122,8 @@ export default function TipsKeuanganPage() {
                     <div className="max-w-4xl mx-auto px-6 sm:px-10 py-12 pb-24 w-full flex-grow">
                         <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-900 dark:text-white leading-tight mb-4 tracking-tight">{selectedContent.judul}</h1>
                         <p className="text-slate-500 dark:text-slate-400 font-bold text-sm sm:text-base mb-8 pb-6 border-b border-slate-100 dark:border-white/5">{selectedContent.deskripsi}</p>
-                        <div className="text-slate-700 dark:text-slate-300 leading-relaxed whitespace-pre-wrap text-base sm:text-lg font-medium">
-                            {selectedContent.isi_konten}
+                        <div className="prose dark:prose-invert max-w-none">
+                            <RichContentRenderer content={selectedContent.isi_konten} />
                         </div>
                         {selectedContent.link_eksternal && (
                             <div className="mt-10 pt-6 border-t border-slate-100 dark:border-white/5">

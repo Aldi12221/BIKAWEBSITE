@@ -1,10 +1,12 @@
 const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 const getAuthHeader = () => {
-  // Cek user token dulu, baru admin token
-  const userToken = localStorage.getItem('bika_token');
-  const adminToken = localStorage.getItem('bika_admin_token');
-  const token = userToken || adminToken;
+  const token = localStorage.getItem('bika_token');
+  return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
+const getAdminAuthHeader = () => {
+  const token = localStorage.getItem('bika_admin_token');
   return token ? { 'Authorization': `Bearer ${token}` } : {};
 };
 
@@ -20,7 +22,10 @@ const api = {
   updateProfile: (id, data) =>
     fetch(`${API_BASE}/user/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        ...getAuthHeader()
+      },
       body: JSON.stringify(data)
     }).then(r => r.json()),
 
@@ -39,7 +44,7 @@ const api = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -49,7 +54,7 @@ const api = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -57,7 +62,7 @@ const api = {
   deleteContent: (id, kategori) =>
     fetch(`${API_BASE}/contents/${id}?kategori=${kategori}`, {
       method: 'DELETE',
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   // ===== Quizzes =====
@@ -72,7 +77,7 @@ const api = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -82,7 +87,7 @@ const api = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -90,7 +95,7 @@ const api = {
   deleteQuiz: (id) =>
     fetch(`${API_BASE}/quizzes/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   // ===== Admin =====
@@ -108,18 +113,18 @@ const api = {
 
   adminStats: () =>
     fetch(`${API_BASE}/admin/stats`, {
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   adminUsers: () =>
     fetch(`${API_BASE}/admin/users`, {
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   deleteAdminUser: (id) =>
     fetch(`${API_BASE}/admin/users/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   adminRegister: (data) =>
@@ -127,7 +132,7 @@ const api = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -135,12 +140,12 @@ const api = {
   // ===== Admin CRUD =====
   getAdmins: () =>
     fetch(`${API_BASE}/admin/admins`, {
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   getAdminById: (id) =>
     fetch(`${API_BASE}/admin/admins/${id}`, {
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   updateAdminUser: (id, data) =>
@@ -148,7 +153,7 @@ const api = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -156,7 +161,7 @@ const api = {
   deleteAdminAccount: (id) =>
     fetch(`${API_BASE}/admin/admins/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 
   // Templates
@@ -168,7 +173,7 @@ const api = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -182,7 +187,7 @@ const api = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -192,7 +197,7 @@ const api = {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader()
+        ...getAdminAuthHeader()
       },
       body: JSON.stringify(data)
     }).then(r => r.json()),
@@ -200,7 +205,7 @@ const api = {
   deleteVideoTutorial: (id) =>
     fetch(`${API_BASE}/video-tutorials/${id}`, {
       method: 'DELETE',
-      headers: getAuthHeader()
+      headers: getAdminAuthHeader()
     }).then(r => r.json()),
 };
 
